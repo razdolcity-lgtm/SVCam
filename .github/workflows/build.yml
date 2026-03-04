@@ -13,13 +13,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.0'
+
+      - name: Generate Gradle Wrapper
+        run: gradle wrapper --gradle-version 8.0
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-
-      - name: Download missing gradle-wrapper.jar
-        run: |
-          mkdir -p gradle/wrapper
-          wget -O gradle/wrapper/gradle-wrapper.jar https://repo1.maven.org/maven2/org/gradle/gradle-wrapper/8.0/gradle-wrapper-8.0.jar
 
       - name: Build Release APK
         run: ./gradlew assembleRelease
