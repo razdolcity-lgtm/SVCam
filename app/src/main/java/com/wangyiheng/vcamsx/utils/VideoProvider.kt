@@ -47,7 +47,7 @@ class VideoProvider : ContentProvider(), KoinComponent {
 
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
         val videoInfo = infoManager.getVideoInfo()
-        val url = videoInfo!!.videoUrl
+        val url = videoInfo?.videoUrl ?: ""
         val fixedUri = Uri.parse(url)
 
         return try {
@@ -79,7 +79,7 @@ class VideoProvider : ContentProvider(), KoinComponent {
     override fun query(uri: Uri, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor {
         // 创建MatrixCursor
         val cursor = MatrixCursor(arrayOf("_id", "display_name", "size", "date_modified","file"))
-        val path = context?.getExternalFilesDir(null)!!.absolutePath
+        val path = context?.getExternalFilesDir(null)?.absolutePath ?: ""
         val file = File(path, "advancedModeMovies/654e1835b70883406c4640c3/caibi_60.mp4")
         // 获取视频文件夹路径
         cursor.addRow(arrayOf(0, file.name, file.length(), file.lastModified(),file))
