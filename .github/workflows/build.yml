@@ -23,7 +23,7 @@ jobs:
           gradle-version: 8.5
 
       - name: Build with Gradle
-        run: gradle assembleRelease
+        run: ./gradlew assembleRelease
 
       # 1. 创建模块目录结构
       - name: Prepare module files
@@ -43,11 +43,9 @@ jobs:
           cat > VCamSX-lsp-module/service.sh << EOF
           #!/system/bin/sh
           MODDIR=\${0%/*}
-          # 在这里添加模块启动逻辑
+          # 模块启动逻辑（如果需要）
           EOF
           chmod +x VCamSX-lsp-module/service.sh
-          # 复制编译好的库文件（根据你的项目实际路径修改）
-          cp -r app/build/intermediates/cmake/release/obj/* VCamSX-lsp-module/lib/ 2>/dev/null || true
           # 复制 META-INF 目录（如果项目中有）
           cp -r META-INF VCamSX-lsp-module/ 2>/dev/null || true
 
