@@ -17,8 +17,14 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Gradle (system version)
-        run: gradle assembleRelease
+      - name: Build with Gradle Wrapper
+        run: |
+          # 下载缺失的 gradle-wrapper.jar (版本 8.5)
+          wget -O gradle/wrapper/gradle-wrapper.jar https://github.com/gradle/gradle/raw/v8.5/gradle/wrapper/gradle-wrapper.jar
+          # 赋予执行权限
+          chmod +x ./gradlew
+          # 执行构建
+          ./gradlew assembleRelease
 
       # 1. 创建模块目录结构
       - name: Prepare module files
