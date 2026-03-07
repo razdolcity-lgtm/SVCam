@@ -1,4 +1,4 @@
-name: Build APK
+name: Build APK and Module
 
 on:
   push:
@@ -25,8 +25,48 @@ jobs:
       - name: Build with Gradle
         run: gradle assembleRelease
 
+      # 1. 创建模块目录结构
+      - name: Prepare module files
+        run: |
+          mkdir -p VCamSX-lsp-module
+          # 创建 module.prop
+          cat > VCamSX-lsp-module/module.prop << EOF
+          id=VCamSX
+          name=VCamSX Virtual Camera
+          version=1.0
+          versionCode=1
+          author=Your Name
+          description=Virtual Camera LSP Module for Android
+          minApi=26
+          EOF
+          # 创建 service.sh
+          cat > VCamSX-lsp-module/service.sh << EOF
+          #!/system/bin/sh
+          MODDIR=\${0%/*}
+          # 在这里添加模块启动逻辑
+          EOF
+          chmod +x VCamSX-lsp-module/service.sh
+          # 复制编译好的库文件（根据你的项目实际路径修改）
+          cp -r app/build/intermediates/cmake/release/obj/* VCamSX-lsp-module/lib/ 2>/dev/null || true
+          # 复制 META-INF 目录（如果项目中有）
+          cp -r META-INF VCamSX-lsp-module/ 2>/dev/null || true
+
+      # 2. 打包模块
+      - name: Package module
+        run: |
+          cd VCamSX-lsp-module
+          zip -r ../VCamSX-lsp-module.zip ./*
+          cd ..
+
+      # 3. 上传 APK 和模块
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: VCamSX-APK
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/release/*.apk
+
+      - name: Upload Module
+        uses: actions/upload-artifact@v4
+        with:
+          name: VCamSX-lsp-module
+          path: VCamSX-lsp-module.zip
