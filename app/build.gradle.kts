@@ -1,8 +1,7 @@
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinSerialization)
-}
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    // id("org.jetbrains.kotlin.plugin.serialization")
 
 android {
     namespace = "com.wangyiheng.vcamsx"
